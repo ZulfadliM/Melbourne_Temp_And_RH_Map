@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset='utf-8' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css' rel='stylesheet' />
+
+<link rel="stylesheet" type="text/css" href="s3915436_style.css">
+
+</head>
+
+<body>
+<!--map-->
+<div id='map'></div>
+
+<!--link to Google Material Icons-->
+<link href='https://fonts.googleapis.com/css?family=Solway' rel='stylesheet'>
+
+<!--Title and map styles-->
+<div class='map-overlay' id='title'>
+  <h2>SEASONAL AIR TEMPERATURE AND RELATIVE HUMIDITY</h2>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!--Map styles-->
+  <div id="menu">
+
+    <input id="cl3z5jcmp000514ry1rttexdm" type="radio" name="rtoggle">
+    <label for="cl3z5jcmp000514ry1rttexdm">
+      <span class="material-icons" style="color: #fde149">sunny
+      </span>
+      Summer</label>
+
+    <input id="cl3z5m8q3000114ovcfjaattr" type="radio" name="rtoggle">
+    <label for="cl3z5m8q3000114ovcfjaattr">
+      <span class="material-icons" style="color: #b8a284">
+        eco</span>
+      Autumn</label>
+
+    <input id="cl3z5cbs3000014ovjnsswgre" type="radio" name="rtoggle">
+    <label for="cl3z5cbs3000014ovjnsswgre">
+      <span class="material-icons" style="color:#47c2fa">
+        ac_unit
+      </span>
+      Winter</label>
+
+    <input id="cl3z5gly8000015mqpw6chsjd" type="radio" name="rtoggle">
+    <label for="cl3z5gly8000015mqpw6chsjd">
+      <span class="material-icons" style="color:#1fd12b;">
+        local_florist
+      </span>
+      Spring</label>
+
+  </div>
+</div>
+
+<!--Map guide at first load-->
+<div class="guide">
+  <h3>
+    Map Guide
+  </h3>
+
+  <ul>
+    <li>Start by toggling map style by the different seasons above.</li>
+    <br>
+    <li>Hover the cursor over a sensor site (red points) to display a graph of daily variation of air temperature and relative humidity in each season.</li>
+    <br>
+    <li><strong>The graphs may take 10 seconds to load at first</strong></li>
+    <br>
+    <li>Toggling buttons on the right will show more informations.</li>
+  </ul>
+
+  <p style="font-style: oblique; font-size: 10px; text-align: center;">
+      <u>By: Zulfadli Mawardi, S3915436</u></p>
+</div>
+
+<!-- Button 1: Notes-->
+<div class="popup1" onclick="myFunction1()">
+  <button id="b1" class="" title="Notes">
+    <i class="material-icons">menu_book</i>
+  </button>
+
+  <span class="popuptext" id="P1">
+    <h3>
+      Air Temperature and Relative Humidity
+    </h3>
+    <p>
+      <b><u>Air Temperature:</u></b> The ambient air temperature measured by the sensors.
+    </p>
+
+    <p>
+      <b><u>Relative Humidity:</u></b> Described as the ratio of how much water vapour that is in the air to how much the air can potentially hold at a given temperature. (<u>Not to be confused with absolute humidity</u>)
+    </p>
+
+    <p>
+      Warm air increases the potential amount of water vapour that the air can hold and vice versa. This implies that relative humidity will decrease as the air temperature increases in an inversely proportional relationship.
+    </p>
+
+    <p style="font-style: oblique; font-size: 8px;">
+      Source:
+      <a href="https://en.wikipedia.org/wiki/Humidity#Relative_humidity" target="_blank">(Relative Humidity, Wikipedia)</a>
+    </p>
+  </span>
+</div>
+
+<!-- Button 2: Map Info-->
+<div class="popup2">
+  <button id="b2" class="" title="Map Info" onclick="myFunction2()">
+    <i class="material-icons" style="font-size: 25px">info</i>
+  </button>
+  <span class="popuptext" id="P2">
+    <h3>
+      Map Info
+    </h3>
+    <p>
+      This map illustrates the relationship between air temperature and relative humidity in four different seasons in 2020. Changing the season of this map will change the theme and data displayed on the map. The comparison of seasonal average values can be displayed with the Seasonal Mean button below. The period of the four seasons are:
+    </p>
+    <ul>
+      <li>Summer: December 2019 - February 2020</li>
+      <li>Autumn: March 2020 - May 2020</li>
+      <li>Winter: June 2020 - August 2020</li>
+      <li>Spring: September 2020 - November 2020</li>
+    </ul>
+    <p>
+      The readings were taken from 3 sensor sites in Carlton, Melbourne. The 3 sites are denoted by the red points on the map. Each sites are identified as 1001, 1002 and 1003. Hovering the cursor over each site will display a graph of the readings at each site according to the season.
+    </p>
+    <p style="font-style: oblique; font-size: 8px;">
+      By: Zulfadli Mawardi, S3915436<br>
+      Source:
+      <a href="https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4" target="_blank">Microclimate Sensor Locations,</a>
+      <a href="https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8" target="_blank">Microclimate Sensor Readings</a>
+    </p>
+
+  </span>
+</div>
+
+<!--Button 3: Seasonal Means-->
+<div class="popup3">
+  <button id="b3" class="" title="Seasonal Mean" onclick="myFunction3()">
+    <i class="material-icons" style="font-size: 25px">compare_arrows</i>
+  </button>
+  <span class="popuptext" id="P3">
+    <h3>
+      Seasonal Mean Comparison
+    </h3>
+    <img id="mean" src="https://i.postimg.cc/MpwZbbjW/seasonal-mean.jpg">
+  </span>
+</div>
+
+<!--Graph Display-->
+<div class="graph-overlay">
+  <p style="text-align: center;">Hover over a sensor site to display a graph!
+  </p>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiemZhZGxpIiwiYSI6ImNsMGV6ZGtxeDBseWYzams5bzV0cHBpMGkifQ.HUrnKZlx2Zoq4CgjaV8rCw';
+
+//Load map style at first load
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/zfadli/cl429by3x001316udk3htj8y2',
+});
+
+//set variables for toggling layers
+const layerList = document.getElementById('menu');
+const inputs = layerList.getElementsByTagName('input');
+
+//Add sensor sites to map
+map.on('style.load', function() {
+  map.addSource('sites', {
+    type: 'vector',
+    url: 'mapbox://zfadli.5vcrbfd8' // Your Mapbox Tileset Map ID
+  });
+  map.addLayer({ //add data points on map
+    'id': 'site_loc',
+    'type': 'circle',
+    'source': 'sites',
+    'source-layer': 'Sensor_sites-511ven', // the name of your new point layer (see tileset)
+    'layout': {
+      'visibility': 'visible'
+    },
+    paint: {
+      'circle-color': 'red',
+      'circle-opacity': 1,
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#888888', //mid grey
+      'circle-radius': 5,
+    }
+  });
+});
+
+//Change style with radio
+for (const input of inputs) {
+  input.onclick = (stlayer) => {
+    const stlayerId = stlayer.target.id;
+    map.setStyle('mapbox://styles/zfadli/' + stlayerId);
+
+    //Hide Map Guide when loading other map style
+    document.getElementsByClassName('guide')[0].style.display = 'none';
+
+    //Hover cursor over sensor sites function
+    map.on('mouseenter', 'site_loc', function(i) {
+
+      var siteid = i.features[0].properties.site_id;
+      var graphoverlay = document.getElementsByClassName('graph-overlay')[0];
+
+      //List of graphs by seasons
+      var summerimages = ['https://i.postimg.cc/MT4CMYVb/1001-Summer.png', 'https://i.postimg.cc/NFHW1rxh/1002-Summer.png', 'https://i.postimg.cc/j5W9bJmW/1003-Summer.png'];
+      var autumnimages = ['https://i.postimg.cc/MpS8mt49/1001-Autumn.png', 'https://i.postimg.cc/h4QWFHRC/1002-Autumn.png', 'https://i.postimg.cc/BnsdKbLy/1003-Autumn.png'];
+      var winterimages = ['https://i.postimg.cc/FKP5mvK6/1001-Winter.png', 'https://i.postimg.cc/15xxyJ9y/1002-Winter.png', 'https://i.postimg.cc/ZR1QK5zw/1003-Winter.png'];
+      var springimages = ['https://i.postimg.cc/qRzfvFhv/1001-Spring.png', 'https://i.postimg.cc/xTLw8MCM/1002-Spring.png', 'https://i.postimg.cc/q7DYSGbV/1003-Spring.png'];
+
+      //Map style id by season
+      const summerid = 'cl3z5jcmp000514ry1rttexdm';
+      const autumnid = 'cl3z5m8q3000114ovcfjaattr';
+      const winterid = 'cl3z5cbs3000014ovjnsswgre';
+      const springid = 'cl3z5gly8000015mqpw6chsjd';
+
+      //Change mouse cursor to pointer 
+      map.getCanvas().style.cursor = 'pointer';
+
+      //Change graph overlay height
+      graphoverlay.style.height = '244px';
+
+      //Display graph at each site at each season
+      if (stlayerId === summerid) {
+        if (siteid === 1001) {
+          graphoverlay.innerHTML = "<img src=" + summerimages[0] + ">";
+        } else if (siteid === 1002) {
+          graphoverlay.innerHTML = "<img src=" + summerimages[1] + ">";
+        } else if (siteid === 1003) {
+          graphoverlay.innerHTML = "<img src=" + summerimages[2] + ">";
+        }
+      }
+
+      if (stlayerId === autumnid) {
+
+        if (siteid === 1001) {
+          graphoverlay.innerHTML = "<img src=" + autumnimages[0] + ">";
+        } else if (siteid === 1002) {
+          graphoverlay.innerHTML = "<img src=" + autumnimages[1] + ">";
+        } else if (siteid === 1003) {
+          graphoverlay.innerHTML = "<img src=" + autumnimages[2] + ">";
+        }
+      }
+
+      if (stlayerId === winterid) {
+        if (siteid === 1001) {
+          graphoverlay.innerHTML = "<img src=" + winterimages[0] + ">";
+        } else if (siteid === 1002) {
+          graphoverlay.innerHTML = "<img src=" + winterimages[1] + ">";
+        } else if (siteid === 1003) {
+          graphoverlay.innerHTML = "<img src=" + winterimages[2] + ">";
+        }
+      }
+
+      if (stlayerId === springid) {
+        if (siteid === 1001) {
+          graphoverlay.innerHTML = "<img src=" + springimages[0] + ">";
+        } else if (siteid === 1002) {
+          graphoverlay.innerHTML = "<img src=" + springimages[1] + ">";
+        } else if (siteid === 1003) {
+          graphoverlay.innerHTML = "<img src=" + springimages[2] + ">";
+        }
+      }
+    });
+
+    // Change cursor back to a pan icon when it leaves and change graph overlay back to original format.
+    map.on('mouseleave', 'site_loc', function() {
+      map.getCanvas().style.cursor = '';
+      document.getElementsByClassName('graph-overlay')[0].style.height = '40px';
+      document.getElementsByClassName('graph-overlay')[0].innerHTML = "<p style = 'text-align: center';>Hover over a sensor site to display a graph!</p>";
+    });
+
+  }
+}
+
+//Button 1: Notes, defines the function to only show Button 1's info and hide other button's info.
+function myFunction1() {
+  var popup1 = document.getElementById("P1");
+  var button1 = document.getElementById("b1");
+  var popup2 = document.getElementById("P2");
+  var button2 = document.getElementById("b2");
+  var popup3 = document.getElementById("P3");
+  var button3 = document.getElementById("b3");
+  if (popup1.style.visibility === 'hidden') {
+    popup1.style.visibility = 'visible';
+    button1.className = 'active';
+    popup3.style.visibility = 'hidden';
+    button3.className = '';
+    popup2.style.visibility = 'hidden';
+    button2.className = '';
+  } else {
+    popup1.style.visibility = 'hidden';
+    button1.className = '';
+  }
+}
+
+//Button 2: Map Info, defines the function to only show Button 2's info and hide other button's info.
+function myFunction2() {
+  var popup1 = document.getElementById("P1");
+  var button1 = document.getElementById("b1");
+  var popup2 = document.getElementById("P2");
+  var button2 = document.getElementById("b2");
+  var popup3 = document.getElementById("P3");
+  var button3 = document.getElementById("b3");
+  if (popup2.style.visibility === 'hidden') {
+    popup2.style.visibility = 'visible';
+    button2.className = 'active';
+    popup1.style.visibility = 'hidden';
+    button1.className = '';
+    popup3.style.visibility = 'hidden';
+    button3.className = '';
+  } else {
+    popup2.style.visibility = 'hidden';
+    button2.className = '';
+  }
+}
+
+//Button 3: Seasonal Means, defines the function to only show Button 3's info and hide other button's info.
+function myFunction3() {
+  var popup1 = document.getElementById("P1");
+  var button1 = document.getElementById("b1");
+  var popup2 = document.getElementById("P2");
+  var button2 = document.getElementById("b2");
+  var popup3 = document.getElementById("P3");
+  var button3 = document.getElementById("b3");
+  if (popup3.style.visibility === 'hidden') {
+    popup3.style.visibility = 'visible';
+    button3.className = 'active';
+    popup1.style.visibility = 'hidden';
+    button1.className = '';
+    popup2.style.visibility = 'hidden';
+    button2.className = '';
+  } else {
+    popup3.style.visibility = 'hidden';
+    button3.className = '';
+  }
+}
+
+</script>
+
+</body>
+
+</html>

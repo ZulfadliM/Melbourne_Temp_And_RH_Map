@@ -1,0 +1,294 @@
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.map-overlay {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  font-family: 'Solway';
+  overflow: auto;
+  border-radius: 3px;
+}
+
+.guide {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: 'Solway';
+  border-radius: 5px;
+  top: 30%;
+  width: 380px;
+  left: 50%;
+  margin-left: -190px;
+}
+
+#title {
+  top: 0;
+  left: 50%;
+  margin-left: -215px;
+  height: 80px;
+  margin-top: 20px;
+  width: 460px;
+  overflow: hidden;
+}
+
+#title h2 {
+  font-size: 15px;
+  text-align: center;
+  Text-decoration-line: underline;
+}
+
+#menu {
+  position: absolute;
+  padding: 0px;
+  border-radius: 3px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  left: 50%;
+  margin-left: -150px;
+}
+
+label {
+  cursor: pointer;
+  vertical-align: 100px;
+  font-family: 'Solway';
+  font-style: oblique;
+  opacity: 0.8;
+  font-weight: bold;
+}
+
+label:hover {
+  opacity: 1.0;
+}
+
+/* Hides radio button*/
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"]+label .material-icons {
+  display: inline-block;
+  opacity: 0.2;
+}
+
+input[type="radio"]:checked+label .material-icons {
+  display: inline-block;
+  opacity: 1.0;
+}
+
+span {
+  vertical-align: -7px;
+}
+
+button {
+  display: block;
+  background-color: #397ff9;
+  opacity: 0.9;
+  color: white;
+  position: fixed;
+  right: 28px;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 50px;
+}
+
+button:hover {
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+  opacity: 1.0;
+  content: attr(title);
+  font-size: 13px;
+  vertical-align: 6px;
+
+}
+
+#b1 {
+  background-color: #397ff9;
+  top: 120px;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 30px;
+
+}
+
+#b1.active {
+  background-color: white;
+  color: #397ff9;
+}
+
+#b1.active:hover {
+  border: 2px solid rgba(57, 127, 249, 0.9);
+}
+
+#b2 {
+  background-color: #397ff9;
+  top: 175px;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 40px;
+}
+
+#b2.active {
+  background-color: white;
+  color: #397ff9;
+}
+
+#b2.active:hover {
+  border: 2px solid rgba(57, 127, 249, 0.9);
+}
+
+#b3 {
+  background-color: #397ff9;
+  top: 232px;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+#b3.active {
+  background-color: white;
+  color: #397ff9;
+}
+
+#b3.active:hover {
+  border: 2px solid rgba(57, 127, 249, 0.9);
+}
+
+.popup1 {
+  position: absolute;
+  display: inline-block;
+  cursor: pointer;
+}
+
+
+/* The actual popup */
+.popup1 .popuptext {
+  visibility: hidden;
+  width: 330px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 1);
+  text-align: center;
+  border-radius: 20px;
+  padding: 8px 20px;
+  position: fixed;
+  top: 120px;
+  right: 90px;
+  z-index: 1;
+}
+
+.popup2 {
+  position: absolute;
+  display: inline-block;
+  cursor: pointer;
+}
+
+
+/* The actual popup */
+.popup2 .popuptext {
+  visibility: hidden;
+  width: 330px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 1);
+  text-align: left;
+  border-radius: 20px;
+  padding: 8px 20px;
+  position: fixed;
+  top: 175px;
+  right: 90px;
+  z-index: 1;
+}
+
+.popup3 {
+  position: absolute;
+  display: inline-block;
+  cursor: pointer;
+}
+
+
+/* The actual popup */
+.popup3 .popuptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 1);
+  text-align: center;
+  border-radius: 20px;
+  padding: 8px 20px;
+  position: fixed;
+  top: 230px;
+  right: 90px;
+  z-index: 1;
+}
+
+h3 {
+  font-family: 'Solway';
+  font-size: 14px;
+  line-height: 5px;
+  text-align: center;
+}
+
+p {
+  font-family: 'Solway';
+  font-size: 11px;
+}
+
+#P1 p {
+  text-align: left;
+}
+
+#P2 h3 {
+  text-align: center;
+}
+
+/* unvisited link */
+a:link {
+  color: blue;
+}
+
+/* visited link */
+a:visited {
+  color: green;
+}
+
+/* mouse over link */
+a:hover {
+  color: purple;
+}
+
+/* selected link */
+a:active {
+  color: red;
+}
+
+.graph-overlay {
+  width: 420px;
+  position: fixed;
+  bottom: 5px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  font-family: 'Solway';
+  overflow: auto;
+  border-radius: 2px;
+  height: 40px;
+
+}
+
+img {
+  width: 420px;
+  height: 240px;
+  border-radius: 2px;
+}
+
+#mean {
+  width: 190px;
+  height: 105px;
+  border-radius: 2px;
+}
+
+li {
+  font-size: 11px;
+  font-family: 'Solway';
+}
