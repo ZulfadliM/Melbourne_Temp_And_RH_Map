@@ -10,6 +10,13 @@
 </head>
 
 <body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<!--Import D3-->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<!--Import Plotly-->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!--import table designs-->
+
 <!--map-->
 <div id='map'></div>
 
@@ -55,32 +62,29 @@
 
 <!--Map guide at first load-->
 <div class="guide">
-  <h3>
+  <h3 style='font-family: Solway; font-size: 16px; font-weight: bold;'>
     Map Guide
   </h3>
 
   <ul>
-    <li>Start by toggling map style by the different seasons above.</li>
+    <li>Start by toggling map style according to the different seasons above.</li>
     <br>
-    <li>Hover the cursor over a sensor site (red points) to display a graph of daily variation of air temperature and relative humidity in each season.</li>
-    <br>
-    <li><strong>The graphs may take 10 seconds to load at first</strong></li>
+    <li>Click on any a sensor site (red points) to display a graph of daily variation of air temperature and relative humidity in each season.</li>
     <br>
     <li>Toggling buttons on the right will show more informations.</li>
+    <p style="font-style: oblique; font-size: 10px; text-align: center; margin-left: -30px; line-height:17px">
+      <u>By: Zulfadli Mawardi, RMIT University</u></p>
   </ul>
-
-  <p style="font-style: oblique; font-size: 10px; text-align: center;">
-      <u>By: Zulfadli Mawardi, S3915436</u></p>
 </div>
 
 <!-- Button 1: Notes-->
 <div class="popup1" onclick="myFunction1()">
-  <button id="b1" class="" title="Notes">
-    <i class="material-icons">menu_book</i>
+  <button id="b1" class="inactive_set" title="Notes">
+    <i class="material-icons" style="font-size:23px">menu_book</i>
   </button>
 
   <span class="popuptext" id="P1">
-    <h3>
+    <h3 style='font-family: Solway; font-size: 13px; font-weight: bold; line-height:20px'>
       Air Temperature and Relative Humidity
     </h3>
     <p>
@@ -104,11 +108,11 @@
 
 <!-- Button 2: Map Info-->
 <div class="popup2">
-  <button id="b2" class="" title="Map Info" onclick="myFunction2()">
-    <i class="material-icons" style="font-size: 25px">info</i>
+  <button id="b2" class="inactive_set" title="Map Info" onclick="myFunction2()">
+    <i class="material-icons" style="font-size: 31px">info</i>
   </button>
   <span class="popuptext" id="P2">
-    <h3>
+    <h3 style='font-family: Solway; font-size: 16px; font-weight: bold;'>
       Map Info
     </h3>
     <p>
@@ -121,10 +125,10 @@
       <li>Spring: September 2020 - November 2020</li>
     </ul>
     <p>
-      The readings were taken from 3 sensor sites in Carlton, Melbourne. The 3 sites are denoted by the red points on the map. Each sites are identified as 1001, 1002 and 1003. Hovering the cursor over each site will display a graph of the readings at each site according to the season.
+      Readings from 5 sensors out of 16 sensors from the dataset were taken into consideration for this map. Only 5 of these sensors were operating in 2020.
     </p>
     <p style="font-style: oblique; font-size: 8px;">
-      By: Zulfadli Mawardi, S3915436<br>
+      By: Zulfadli Mawardi, RMIT University<br>
       Source:
       <a href="https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Locations/irqv-hjr4" target="_blank">Microclimate Sensor Locations,</a>
       <a href="https://data.melbourne.vic.gov.au/Environment/Microclimate-Sensor-Readings/u4vh-84j8" target="_blank">Microclimate Sensor Readings</a>
@@ -133,24 +137,12 @@
   </span>
 </div>
 
-<!--Button 3: Seasonal Means-->
-<div class="popup3">
-  <button id="b3" class="" title="Seasonal Mean" onclick="myFunction3()">
-    <i class="material-icons" style="font-size: 25px">compare_arrows</i>
-  </button>
-  <span class="popuptext" id="P3">
-    <h3>
-      Seasonal Mean Comparison
-    </h3>
-    <img id="mean" src="https://i.postimg.cc/MpwZbbjW/seasonal-mean.jpg">
-  </span>
-</div>
 
 <!--Graph Display-->
 <div class="graph-overlay">
-  <p style="text-align: center;">Hover over a sensor site to display a graph!
-  </p>
+  <p id='graph-text' , style='color: rgba(150,150,150,0.2)'>Click sensor sites to compare air temperature and relative humidity </p>
 </div>
+
 
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiemZhZGxpIiwiYSI6ImNsMGV6ZGtxeDBseWYzams5bzV0cHBpMGkifQ.HUrnKZlx2Zoq4CgjaV8rCw';
@@ -159,23 +151,29 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiemZhZGxpIiwiYSI6ImNsMGV6ZGtxeDBseWYzams5bzV0c
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/zfadli/cl429by3x001316udk3htj8y2',
+
 });
+
+map.setZoom(14.5);
+map.setCenter([144.968, -37.796]);
 
 //set variables for toggling layers
 const layerList = document.getElementById('menu');
 const inputs = layerList.getElementsByTagName('input');
 
+
+
 //Add sensor sites to map
 map.on('style.load', function() {
   map.addSource('sites', {
     type: 'vector',
-    url: 'mapbox://zfadli.5vcrbfd8' // Your Mapbox Tileset Map ID
+    url: 'mapbox://zfadli.c7bxt1l7' // Your Mapbox Tileset Map ID
   });
   map.addLayer({ //add data points on map
     'id': 'site_loc',
     'type': 'circle',
     'source': 'sites',
-    'source-layer': 'Sensor_sites-511ven', // the name of your new point layer (see tileset)
+    'source-layer': 'Sensor_locations-bnb5z1', // the name of your new point layer (see tileset)
     'layout': {
       'visibility': 'visible'
     },
@@ -184,7 +182,7 @@ map.on('style.load', function() {
       'circle-opacity': 1,
       'circle-stroke-width': 1,
       'circle-stroke-color': '#888888', //mid grey
-      'circle-radius': 5,
+      'circle-radius': 6
     }
   });
 });
@@ -194,21 +192,60 @@ for (const input of inputs) {
   input.onclick = (stlayer) => {
     const stlayerId = stlayer.target.id;
     map.setStyle('mapbox://styles/zfadli/' + stlayerId);
+    map.setZoom(15.7);
+    map.setCenter([144.965, -37.801]);
 
     //Hide Map Guide when loading other map style
     document.getElementsByClassName('guide')[0].style.display = 'none';
+    var graphoverlay = document.getElementsByClassName('graph-overlay')[0];
+    graphoverlay.innerHTML = "<p id='graph-text' , style='color: rgba(100,100,100,1)'>Click sensor sites to compare air temperature and relative humidity </p>"
+
+    const summerid = 'cl3z5jcmp000514ry1rttexdm';
+    const autumnid = 'cl3z5m8q3000114ovcfjaattr';
+    const winterid = 'cl3z5cbs3000014ovjnsswgre';
+    const springid = 'cl3z5gly8000015mqpw6chsjd';
+
+    graphoverlay.style.height = '34px';
+    if (stlayerId === summerid) {
+      graphoverlay.style.border = '3px solid rgba(254, 199, 46, 0.8)'
+    }
+
+    if (stlayerId === autumnid) {
+      graphoverlay.style.border = '3px solid rgba(148, 114, 41, 0.8)'
+    }
+
+    if (stlayerId === winterid) {
+      graphoverlay.style.border = '3px solid rgba(52, 112, 233, 0.8)'
+    }
+
+    if (stlayerId === springid) {
+      graphoverlay.style.border = '3px solid rgba(21, 177, 31, 0.8)'
+    }
+
+
 
     //Hover cursor over sensor sites function
-    map.on('mouseenter', 'site_loc', function(i) {
+    map.on('mouseenter', 'site_loc', function() {
+      map.getCanvas().style.cursor = 'pointer';
+    })
 
-      var siteid = i.features[0].properties.site_id;
+    // Change cursor back to a pan icon when it leaves and change graph overlay back to original format.
+    map.on('mouseleave', 'site_loc', function() {
+      map.getCanvas().style.cursor = '';
+    });
+
+
+
+    //display site mean on popups numbers on click
+    map.on('click', 'site_loc', function(e) {
+
+      var siteid = map.queryRenderedFeatures(e.point)[0].properties.site_id;
+      var sites = ['1001', '1002', '1003', '1004', '1005'];
+      var siteid_toRow = parseInt(siteid.toString().charAt(3));
       var graphoverlay = document.getElementsByClassName('graph-overlay')[0];
 
-      //List of graphs by seasons
-      var summerimages = ['https://i.postimg.cc/MT4CMYVb/1001-Summer.png', 'https://i.postimg.cc/NFHW1rxh/1002-Summer.png', 'https://i.postimg.cc/j5W9bJmW/1003-Summer.png'];
-      var autumnimages = ['https://i.postimg.cc/MpS8mt49/1001-Autumn.png', 'https://i.postimg.cc/h4QWFHRC/1002-Autumn.png', 'https://i.postimg.cc/BnsdKbLy/1003-Autumn.png'];
-      var winterimages = ['https://i.postimg.cc/FKP5mvK6/1001-Winter.png', 'https://i.postimg.cc/15xxyJ9y/1002-Winter.png', 'https://i.postimg.cc/ZR1QK5zw/1003-Winter.png'];
-      var springimages = ['https://i.postimg.cc/qRzfvFhv/1001-Spring.png', 'https://i.postimg.cc/xTLw8MCM/1002-Spring.png', 'https://i.postimg.cc/q7DYSGbV/1003-Spring.png'];
+      graphoverlay.innerHTML = '<button id="b4" class="" title="Expand To Compare Temperature and Relative Humidity" onclick=CloseComparison() style="font-size:12px; color: rgba(150,150,150,0.6)">X</button> <br> <div id="plotid">';
+
 
       //Map style id by season
       const summerid = 'cl3z5jcmp000514ry1rttexdm';
@@ -216,63 +253,223 @@ for (const input of inputs) {
       const winterid = 'cl3z5cbs3000014ovjnsswgre';
       const springid = 'cl3z5gly8000015mqpw6chsjd';
 
-      //Change mouse cursor to pointer 
-      map.getCanvas().style.cursor = 'pointer';
+      var season = [summerid, autumnid, winterid, springid]
 
-      //Change graph overlay height
-      graphoverlay.style.height = '244px';
+      d3.csv("https://raw.githubusercontent.com/zfadli1210/Melbourne_Temp_And_RH_Map/main/NACIS_data_site_mean.csv", function(data) {
 
-      //Display graph at each site at each season
-      if (stlayerId === summerid) {
-        if (siteid === 1001) {
-          graphoverlay.innerHTML = "<img src=" + summerimages[0] + ">";
-        } else if (siteid === 1002) {
-          graphoverlay.innerHTML = "<img src=" + summerimages[1] + ">";
-        } else if (siteid === 1003) {
-          graphoverlay.innerHTML = "<img src=" + summerimages[2] + ">";
+        if (stlayerId === summerid) {
+
+          //create popup for summer means
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML("<p>Site ID " + siteid + "<br>" + "Mean Temperature: " +
+              parseFloat(data[(siteid_toRow * 2) - 2].Summer).toFixed(1) +
+              "<br>" +
+              "Mean Relative Humidity: " +
+              parseFloat(data[(siteid_toRow * 2) - 1].Summer).toFixed(1) +
+              "</p>")
+            .addTo(map);
         }
-      }
 
-      if (stlayerId === autumnid) {
+        if (stlayerId === autumnid) {
 
-        if (siteid === 1001) {
-          graphoverlay.innerHTML = "<img src=" + autumnimages[0] + ">";
-        } else if (siteid === 1002) {
-          graphoverlay.innerHTML = "<img src=" + autumnimages[1] + ">";
-        } else if (siteid === 1003) {
-          graphoverlay.innerHTML = "<img src=" + autumnimages[2] + ">";
+          //create popup for autumn means
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML("<p>Site ID " + siteid + "<br>" + "Mean Temperature: " +
+              parseFloat(data[(siteid_toRow * 2) - 2].Autumn).toFixed(1) +
+              "<br>" +
+              "Mean Relative Humidity: " +
+              parseFloat(data[(siteid_toRow * 2) - 1].Autumn).toFixed(1) +
+              "</p>")
+            .addTo(map);
         }
-      }
 
-      if (stlayerId === winterid) {
-        if (siteid === 1001) {
-          graphoverlay.innerHTML = "<img src=" + winterimages[0] + ">";
-        } else if (siteid === 1002) {
-          graphoverlay.innerHTML = "<img src=" + winterimages[1] + ">";
-        } else if (siteid === 1003) {
-          graphoverlay.innerHTML = "<img src=" + winterimages[2] + ">";
-        }
-      }
+        if (stlayerId === winterid) {
 
-      if (stlayerId === springid) {
-        if (siteid === 1001) {
-          graphoverlay.innerHTML = "<img src=" + springimages[0] + ">";
-        } else if (siteid === 1002) {
-          graphoverlay.innerHTML = "<img src=" + springimages[1] + ">";
-        } else if (siteid === 1003) {
-          graphoverlay.innerHTML = "<img src=" + springimages[2] + ">";
+          //create popup for winter means
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML("<p>Site ID " + siteid + "<br>" + "Mean Temperature: " +
+              parseFloat(data[(siteid_toRow * 2) - 2].Winter).toFixed(1) +
+              "<br>" +
+              "Mean Relative Humidity: " +
+              parseFloat(data[(siteid_toRow * 2) - 1].Winter).toFixed(1) +
+              "</p>")
+            .addTo(map);
         }
-      }
+
+        if (stlayerId === springid) {
+
+          //create popup spring means
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML("<p>Site ID " + siteid + "<br>" + "Mean Temperature: " +
+              parseFloat(data[(siteid_toRow * 2) - 2].Spring).toFixed(1) +
+              "<br>" +
+              "Mean Relative Humidity: " +
+              parseFloat(data[(siteid_toRow * 2) - 1].Spring).toFixed(1) +
+              "</p>")
+            .addTo(map);
+        }
+      });
+
+      //Graph by season by site
+      d3.csv("https://raw.githubusercontent.com/zfadli1210/Melbourne_Temp_And_RH_Map/main/NACIS_data.csv", function(err, rows) {
+
+        //Unpack dataframe
+        function unpack(rows, key) {
+          return rows.map(function(row) {
+            return row[key];
+          });
+        }
+
+        //define season date range
+        var sum_date = ['2019-12-01', '2020-02-29'];
+        var aut_date = ['2020-03-01', '2020-05-31'];
+        var win_date = ['2020-06-01', '2020-08-31'];
+        var spr_date = ['2020-09-01', '2020-11-30'];
+        var season_dates = [sum_date, aut_date, win_date, spr_date];
+
+        //Identify mid of month
+        var sum_mid = ['2019-12-14', '2020-01-14', '2020-02-14'];
+        var aut_mid = ['2020-03-14', '2020-04-14', '2020-05-14'];
+        var win_mid = ['2020-06-14', '2020-07-14', '2020-08-14'];
+        var spr_mid = ['2020-09-14', '2020-10-14', '2020-11-14'];
+        var season_mid = [sum_mid, aut_mid, win_mid, spr_mid];
+
+        // Plot by season
+        if (season.indexOf(stlayerId) > -1) {
+          var plotid = document.getElementById('plotid');
+
+          //Temperature data for plot
+          var trace1 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'T (&deg;C)',
+            x: unpack(rows, 'Date'),
+            y: unpack(rows, siteid + '_T'),
+            line: {
+              borderColor: 'rgb(255,255,255)',
+              color: '#f59916'
+            },
+            hoverlabel: {
+              font: {
+                color: 'white'
+              },
+              bordercolor: 'white'
+            },
+
+          }
+
+          //RH data for plot
+          var trace2 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'RH (%)',
+            x: unpack(rows, 'Date'),
+            y: unpack(rows, siteid + '_RH'),
+            line: {
+              color: '#077ad9'
+            },
+            yaxis: 'y2',
+          }
+
+          var data = [trace1, trace2];
+
+          // Set layout parameter for plot
+          var layout = {
+            margin: {
+              t: 30,
+              b: 20,
+              r: 50,
+              l: 50
+            },
+            title: {
+              text: 'Site ID ' + siteid,
+              font: {
+                family: 'Solway',
+                size: 14,
+                color: '#000000'
+              }
+
+            },
+            xaxis: {
+              linecolor: 'rgb(180,180,180)',
+              showgrid: false,
+              showline: true,
+              tickvals: season_mid[season.indexOf(stlayerId)],
+              tickformat: '%b',
+              tickfont: {
+                size: 10
+              },
+              range: season_dates[season.indexOf(stlayerId)],
+              type: 'date'
+            },
+            yaxis: {
+              ticks: 'outside',
+              range: [0, 35],
+              linecolor: 'rgb(180,180,180)',
+              showline: true,
+              showgrid: false,
+              tickfont: {
+                size: 10
+              },
+              title: {
+                text: 'Air Temperature \u00B0C',
+                font: {
+                  family: 'Solway',
+                  size: 11,
+                  color: '#454545'
+                }
+
+              }
+            },
+            yaxis2: {
+              range: [0, 100],
+              ticks: 'outside',
+              linecolor: 'rgb(180,180,180)',
+              showline: true,
+              showgrid: false,
+              tickfont: {
+                size: 10
+              },
+              title: {
+                text: 'Relative Humidity %',
+                font: {
+                  family: 'Solway',
+                  size: 11,
+                  color: '#454545'
+                }
+              },
+              overlaying: 'y',
+              side: 'right'
+            },
+            legend: {
+              bgcolor: 'rgba(255,255,255,0.5)',
+              orientation: 'h',
+              font: {
+                family: 'Solway',
+                size: 8,
+                color: '#454545'
+              },
+              x: 0.75,
+              xanchor: 'right',
+              y: -0.1
+            },
+            height: 270,
+            
+          };
+
+          var graphoverlay = document.getElementsByClassName('graph-overlay')[0];
+          graphoverlay.style.height = '310px';
+
+          Plotly.newPlot('plotid', data, layout);
+        }
+      })
     });
-
-    // Change cursor back to a pan icon when it leaves and change graph overlay back to original format.
-    map.on('mouseleave', 'site_loc', function() {
-      map.getCanvas().style.cursor = '';
-      document.getElementsByClassName('graph-overlay')[0].style.height = '40px';
-      document.getElementsByClassName('graph-overlay')[0].innerHTML = "<p style = 'text-align: center';>Hover over a sensor site to display a graph!</p>";
-    });
-
   }
+
 }
 
 //Button 1: Notes, defines the function to only show Button 1's info and hide other button's info.
@@ -281,18 +478,14 @@ function myFunction1() {
   var button1 = document.getElementById("b1");
   var popup2 = document.getElementById("P2");
   var button2 = document.getElementById("b2");
-  var popup3 = document.getElementById("P3");
-  var button3 = document.getElementById("b3");
   if (popup1.style.visibility === 'hidden') {
     popup1.style.visibility = 'visible';
     button1.className = 'active';
-    popup3.style.visibility = 'hidden';
-    button3.className = '';
     popup2.style.visibility = 'hidden';
-    button2.className = '';
+    button2.className = 'inactive_set';
   } else {
     popup1.style.visibility = 'hidden';
-    button1.className = '';
+    button1.className = 'inactive_set';
   }
 }
 
@@ -302,40 +495,25 @@ function myFunction2() {
   var button1 = document.getElementById("b1");
   var popup2 = document.getElementById("P2");
   var button2 = document.getElementById("b2");
-  var popup3 = document.getElementById("P3");
-  var button3 = document.getElementById("b3");
   if (popup2.style.visibility === 'hidden') {
     popup2.style.visibility = 'visible';
     button2.className = 'active';
     popup1.style.visibility = 'hidden';
-    button1.className = '';
-    popup3.style.visibility = 'hidden';
-    button3.className = '';
+    button1.className = 'inactive_set';
   } else {
     popup2.style.visibility = 'hidden';
-    button2.className = '';
+    button2.className = 'inactive_set';
   }
 }
 
-//Button 3: Seasonal Means, defines the function to only show Button 3's info and hide other button's info.
-function myFunction3() {
-  var popup1 = document.getElementById("P1");
-  var button1 = document.getElementById("b1");
-  var popup2 = document.getElementById("P2");
-  var button2 = document.getElementById("b2");
-  var popup3 = document.getElementById("P3");
-  var button3 = document.getElementById("b3");
-  if (popup3.style.visibility === 'hidden') {
-    popup3.style.visibility = 'visible';
-    button3.className = 'active';
-    popup1.style.visibility = 'hidden';
-    button1.className = '';
-    popup2.style.visibility = 'hidden';
-    button2.className = '';
-  } else {
-    popup3.style.visibility = 'hidden';
-    button3.className = '';
-  }
+function CloseComparison() {
+
+  var graphoverlay = document.getElementsByClassName('graph-overlay')[0];
+  var button4 = document.getElementById("b4");
+  var icon4 = document.getElementById("icon_04");
+
+  graphoverlay.style.height = '35px';
+  graphoverlay.innerHTML = "<p id= 'graph-text', style = 'color: rgba(100,100,100,1)'>Click sensor sites to compare air temperature and relative humidity </p>"
 }
 
 </script>
