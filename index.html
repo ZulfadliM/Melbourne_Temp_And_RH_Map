@@ -300,15 +300,21 @@ for (const input of inputs) {
         }
 
         if (stlayerId === springid) {
-
+					function nodata(value) {
+          if (value == 0) {
+          	return '<strong>NO DATA</strong>'
+            }
+          else
+          	return value
+          }
           //create popup spring means
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML("<p>Site ID " + siteid + "<br>" + "Mean Temperature: " +
-              parseFloat(data[(siteid_toRow * 2) - 2].Spring).toFixed(1) +
+              nodata(parseFloat(data[(siteid_toRow * 2) - 2].Spring).toFixed(1)) +
               "<br>" +
               "Mean Relative Humidity: " +
-              parseFloat(data[(siteid_toRow * 2) - 1].Spring).toFixed(1) +
+              nodata(parseFloat(data[(siteid_toRow * 2) - 1].Spring).toFixed(1)) +
               "</p>")
             .addTo(map);
         }
